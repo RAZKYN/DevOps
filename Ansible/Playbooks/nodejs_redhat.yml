@@ -1,0 +1,7 @@
+---
+- name: Install Nodejs
+  become: yes
+  hosts: all
+  tasks:
+    - name: install NodeJS
+    
