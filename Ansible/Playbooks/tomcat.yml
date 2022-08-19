@@ -20,7 +20,8 @@
         shell: /bin/false
         state: present
       when: ansible_facts['os_family'] == "Debian"  
-#    - name: wget
-#      ansible.builtin.get_url:  
-#       url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz
-#        dest: /opt/tomcat
+    - name: tomcat Downloading... 
+      ansible.builtin.get_url:  
+        url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz
+        dest: "/tmp/apache-tomcat-10.0.20.tar.gz"
+      when: ansible_facts['os_family'] == "Debian"
