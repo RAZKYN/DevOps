@@ -22,6 +22,6 @@
       when: ansible_facts['os_family'] == "Debian"  
     - name: tomcat Downloading... 
       ansible.builtin.get_url:  
-        url: "https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz"
-        dest: "/tmp/apache-tomcat-10.0.20.tar.gz"
+        url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.tar.gz"
+        dest: "/tmp/apache-tomcat-9.0.65.tar.gz"
       when: ansible_facts['os_family'] == "Debian"
