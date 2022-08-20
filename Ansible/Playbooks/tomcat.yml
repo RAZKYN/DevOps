@@ -1,27 +1,60 @@
 ---
-- name: Install Tomcat 10
+- name: Install Tomcat 9
   become: yes
   hosts: all
+  vars:
+    - username: tomcat
+    - home_dir: /opt/tomcat
+    - default_shell: /bin/false
+    - tomcat_version: 9.0.65
+
   tasks:
-    - name: update apt repo and cache
+    - name: Update apt repo and cache
       apt:
         update_cache: yes
         force_apt_get: yes
       when: ansible_facts['os_family'] == "Debian"
-    - name: install openjdk 11
+    - name: Install openjdk 11
       package:
         name: "{{ java_package }}"
         state: present 
-    - name: creating a tomcat user
+    - name: Create a tomcat user
       ansible.builtin.user:
         create_home: yes
-        home: /opt/tomcat
-        name: tomcat
-        shell: /bin/false
+        name: "{{ username }}"
+        home: "{{ home_dir }}"
+        shell: "{{ default_shell }}"
         state: present
       when: ansible_facts['os_family'] == "Debian"  
-    - name: tomcat Downloading... 
+    - name: Download tomcat 
       ansible.builtin.get_url:  
         url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.tar.gz"
         dest: "/tmp/apache-tomcat-9.0.65.tar.gz"
       when: ansible_facts['os_family'] == "Debian"
+    - name: Extract tar file 
+      ansible.builtin.unarchive:
+        src: "{{ home_dir }}/apache-tomcat-9.0.65.tar.gz"
+        dest: "{{ home_dir }}"
+        creates: "{{ home_dir }}/apache-tomcat-9.0.65"
+        owner: tomcat
+        group: tomcat
+        remote_src: yes
+      when: ansible_facts['os_family'] == "Debian"
+    - name: Create a symbolic link
+      ansible.builtin.file:
+        src: "{{ home_dir }}/apache-tomcat-9.0.65.tar.gz"
+        dest: /opt/tomcat
+        owner: tomcat
+        group: tomcat
+        state: link
+      when: ansible_facts['os_family'] == "Debian"
+    - name: Change ownership
+      ansible.builtin.file:
+        path: "{{ home_dir }}"
+        state: directory
+        recurse: yes
+        owner: tomcat
+        group: tomcat
+      when: ansible_facts['os_family'] == "Debian"              
+
+      
