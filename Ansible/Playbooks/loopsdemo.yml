@@ -1,0 +1,10 @@
+---
+- name: loops
+  hosts: all
+  gather_facts: no
+  tasks:
+    - debug:
+        msg: "{{ item }}"
+      loop:
+        - Chef
+        - Docker

@@ -1,0 +1,37 @@
+- name: find all .sh files in the tomcat bin directory
+  ansible.builtin.find:
+    paths: "/opt/tomcat/latest/bin/"
+    patterns: "*.sh"
+  when: ansible_facts['os_family'] == "Debian"
+  register: sh_files_tomcat_bin
+- name: Print files from previous module
+  debug:
+    var: sh_files_tomcat_bin
+- name: Make sh files Executable                            # sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
+  ansible.builtin.file:
+    path: "/opt/tomcat/latest/bin/"
+    owner: tomcat
+    group: tomcat
+    mode: 0755
+    loop: "{{ sh_files_tomcat_bin }}"
+  when: ansible_facts['os_family'] == "Debian"
+- name: copy the tomcat service file                        # sudo vi /etc/systemd/system/tomcat.service
+  ansible.builtin.copy:
+    src: 'tomcat.service'
+    dest: "/etc/systemd/system/"
+    owner: tomcat
+    group: tomcat
+  when: ansible_facts['os_family'] == "Debian"
+- name: Reload the daemon, enable and start the service     # sudo systemctl daemon-reload, # sudo systemctl enable --now tomcat, # sudo systemctl status tomcat 
+  ansible.builtin.systemd:
+    name: 'tomcat.service'
+    daemon_reload: yes
+    enabled: yes
+    state: started
+  when: ansible_facts['os_family'] == "Debian"  
+
+
+
+
+
+

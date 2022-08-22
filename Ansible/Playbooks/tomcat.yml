@@ -7,18 +7,19 @@
     - home_dir: /opt/tomcat
     - default_shell: /bin/false
     - tomcat_version: 9.0.65
+    - tomcat_latest: /opt/tomcat/latest
 
   tasks:
-    - name: Update apt repo and cache
+    - name: Update apt repo and cache                               # sudo apt update
       apt:
         update_cache: yes
         force_apt_get: yes
       when: ansible_facts['os_family'] == "Debian"
-    - name: Install openjdk 11
+    - name: Install openjdk 11                                      # sudo apt install openjdk-11-jdk -y
       package:
         name: "{{ java_package }}"
         state: present 
-    - name: Create a tomcat user
+    - name: Create a tomcat user                                    # sudo useradd -m -U -d /opt/tomcat -s /bin/false tomcat
       ansible.builtin.user:
         create_home: yes
         name: "{{ username }}"
@@ -26,35 +27,66 @@
         shell: "{{ default_shell }}"
         state: present
       when: ansible_facts['os_family'] == "Debian"  
-    - name: Download tomcat 
+    - name: Download tomcat                                         # wget https://dlcdn.apache.org/tomcat/tomcat-9/v${VERSION}/bin/apache-tomcat-${VERSION}.tar.gz -P /tmp
       ansible.builtin.get_url:  
         url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.tar.gz"
         dest: "/tmp/apache-tomcat-9.0.65.tar.gz"
       when: ansible_facts['os_family'] == "Debian"
-    - name: Extract tar file 
+    - name: Extract tar file                                        # sudo tar -xf /tmp/apache-tomcat-${VERSION}.tar.gz -C /opt/tomcat/
       ansible.builtin.unarchive:
-        src: "{{ home_dir }}/apache-tomcat-9.0.65.tar.gz"
+        src: "/tmp/apache-tomcat-9.0.65.tar.gz"
         dest: "{{ home_dir }}"
         creates: "{{ home_dir }}/apache-tomcat-9.0.65"
         owner: tomcat
         group: tomcat
         remote_src: yes
       when: ansible_facts['os_family'] == "Debian"
-    - name: Create a symbolic link
+    - name: Create a symbolic link                                  # sudo ln -s /opt/tomcat/apache-tomcat-${VERSION} /opt/tomcat/latest
       ansible.builtin.file:
-        src: "{{ home_dir }}/apache-tomcat-9.0.65.tar.gz"
-        dest: /opt/tomcat
+        src: "{{ home_dir }}/apache-tomcat-9.0.65"
+        dest: "{{ tomcat_latest }}"
         owner: tomcat
         group: tomcat
         state: link
       when: ansible_facts['os_family'] == "Debian"
-    - name: Change ownership
+    - name: Change ownership for tomcat user                        # sudo chown -R tomcat: /opt/tomcat
       ansible.builtin.file:
         path: "{{ home_dir }}"
         state: directory
         recurse: yes
         owner: tomcat
         group: tomcat
-      when: ansible_facts['os_family'] == "Debian"              
+      when: ansible_facts['os_family'] == "Debian"
+    - name: find all .sh files in the tomcat bin directory
+      ansible.builtin.find:
+        paths: "/opt/tomcat/latest/bin/"
+        patterns: "*.sh"
+      when: ansible_facts['os_family'] == "Debian"
+      register: sh_files_tomcat_bin
+    - name: Print files from previous module
+      debug:
+        var: sh_files_tomcat_bin
+    - name: Make sh files Executable                                # sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
+      ansible.builtin.file:
+        path: "/opt/tomcat/latest/bin/"
+        owner: tomcat
+        group: tomcat
+        mode: 0755
+        loop: "{{ sh_files_tomcat_bin }}"
+      when: ansible_facts['os_family'] == "Debian"
+    - name: copy the tomcat service file                            # sudo vi /etc/systemd/system/tomcat.service
+      ansible.builtin.copy:
+        src: 'tomcat.service'
+        dest: "/etc/systemd/system/"
+        owner: tomcat
+        group: tomcat
+      when: ansible_facts['os_family'] == "Debian"
+    - name: Reload the daemon, enable and start the service         # sudo systemctl daemon-reload, # sudo systemctl enable --now tomcat, # sudo systemctl status tomcat 
+      ansible.builtin.systemd:
+        name: 'tomcat.service'
+        daemon_reload: yes
+        enabled: yes
+        state: started
+      when: ansible_facts['os_family'] == "Debian"                 
 
       

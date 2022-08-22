@@ -1,0 +1,33 @@
+---
+- name: Extract tomcat
+  ansible.builtin.unarchive:
+    creates: "/opt/tomcat/apache-tomcat-9.0.65"
+    src: "/tmp/apache-tomcat-9.0.65.tar.gz"
+    dest: "/opt/tomcat/"
+    owner: tomcat
+    group: tomcat
+    remote_src: yes
+  when: ansible_facts['os_family'] == "Debian"  
+- name: Create a Symbolic link
+  ansible.builtin.file:
+    src: "/opt/tomcat/apache-tomcat-9.0.65"
+    dest: "/opt/tomcat/latest"
+    owner: tomcat
+    group: tomcat
+    state: link
+  when: ansible_facts['os_family'] == "Debian"  
+- name: Recursively change the ownership of tomcat user
+  ansible.builtin.file:
+    path: /opt/tomcat
+    state: directory
+    recurse: yes
+    owner: tomcat
+    group: tomcat 
+  when: ansible_facts['os_family'] == "Debian"
+
+
+
+
+
+
+
