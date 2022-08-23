@@ -8,6 +8,7 @@
     - default_shell: /bin/false
     - tomcat_version: 9.0.65
     - tomcat_latest: /opt/tomcat/latest
+    - tomcat_bin_directory: /opt/tomcat/latest/bin
 
   tasks:
     - name: Update apt repo and cache                               # sudo apt update
@@ -68,11 +69,11 @@
         var: sh_files_tomcat_bin
     - name: Make sh files Executable                                # sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
       ansible.builtin.file:
-        path: "/opt/tomcat/latest/bin/"
+        path: '{{ item.path }}'
         owner: tomcat
         group: tomcat
-        mode: 0755
-        loop: "{{ sh_files_tomcat_bin }}"
+        mode: '0755'
+      loop: "{{ sh_files_tomcat_bin.files }}"
       when: ansible_facts['os_family'] == "Debian"
     - name: copy the tomcat service file                            # sudo vi /etc/systemd/system/tomcat.service
       ansible.builtin.copy:
