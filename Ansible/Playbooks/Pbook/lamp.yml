@@ -1,0 +1,35 @@
+---
+- name: Install L.A.M.P stack
+  become: yes
+  hosts: all
+  tasks:
+    - name: Install Apache Web Server
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+    - name: Reload the daemon, enable and start the service
+      ansible.builtin.systemd:
+        name: 'httpd.service'
+        daemon_reload: yes
+        enabled: yes
+        state: started
+    - name: Install php
+      ansible.builtin.yum:
+        name: php
+        state: latest
+    - name: Change ownership
+      ansible.builtin.file:
+        path: "/var/www/html/"
+        state: directory
+        creates: "/var/www/html/info.php"
+        recurse: yes
+        owner: jimmy
+        group: jimmy
+    - name: Test PHP on Apache Web Server
+      ansible.builtin.copy:
+        src: 'php.service'
+        dest: "/var/www/html/info.php"
+        owner: jimmy
+        group: jimmy
+
+          

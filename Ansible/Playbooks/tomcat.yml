@@ -9,6 +9,8 @@
     - tomcat_version: 9.0.65
     - tomcat_latest: /opt/tomcat/latest
     - tomcat_bin_directory: /opt/tomcat/latest/bin
+    - tomcat_service_location: /etc/systemd/system/tomcat.service
+    - java_home: /usr/lib/jvm/java-11-openjdk-amd64
 
   tasks:
     - name: Update apt repo and cache                               # sudo apt update
@@ -38,16 +40,16 @@
         src: "/tmp/apache-tomcat-9.0.65.tar.gz"
         dest: "{{ home_dir }}"
         creates: "{{ home_dir }}/apache-tomcat-9.0.65"
-        owner: tomcat
-        group: tomcat
+        owner: "{{ username }}"
+        group: "{{ username }}"
         remote_src: yes
       when: ansible_facts['os_family'] == "Debian"
     - name: Create a symbolic link                                  # sudo ln -s /opt/tomcat/apache-tomcat-${VERSION} /opt/tomcat/latest
       ansible.builtin.file:
         src: "{{ home_dir }}/apache-tomcat-9.0.65"
         dest: "{{ tomcat_latest }}"
-        owner: tomcat
-        group: tomcat
+        owner: "{{ username }}"
+        group: "{{ username }}"
         state: link
       when: ansible_facts['os_family'] == "Debian"
     - name: Change ownership for tomcat user                        # sudo chown -R tomcat: /opt/tomcat
@@ -55,12 +57,12 @@
         path: "{{ home_dir }}"
         state: directory
         recurse: yes
-        owner: tomcat
-        group: tomcat
+        owner: "{{ username }}"
+        group: "{{ username }}"
       when: ansible_facts['os_family'] == "Debian"
     - name: find all .sh files in the tomcat bin directory
       ansible.builtin.find:
-        paths: "/opt/tomcat/latest/bin/"
+        paths: "{{ tomcat_bin_directory }}"
         patterns: "*.sh"
       when: ansible_facts['os_family'] == "Debian"
       register: sh_files_tomcat_bin
@@ -70,24 +72,31 @@
     - name: Make sh files Executable                                # sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
       ansible.builtin.file:
         path: '{{ item.path }}'
-        owner: tomcat
-        group: tomcat
+        owner: "{{ username }}"
+        group: "{{ username }}"
         mode: '0755'
       loop: "{{ sh_files_tomcat_bin.files }}"
       when: ansible_facts['os_family'] == "Debian"
     - name: copy the tomcat service file                            # sudo vi /etc/systemd/system/tomcat.service
-      ansible.builtin.copy:
-        src: 'tomcat.service'
-        dest: "/etc/systemd/system/"
-        owner: tomcat
-        group: tomcat
+      ansible.builtin.template:
+        src: 'tomcat.service.j2'
+        dest: "{{ tomcat_service_location }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
       when: ansible_facts['os_family'] == "Debian"
-    - name: Reload the daemon, enable and start the service         # sudo systemctl daemon-reload, # sudo systemctl enable --now tomcat, # sudo systemctl status tomcat 
+      notify:
+        - Reload the daemon, enable and start tomcat service
+    - name: Ensure tomcat service is running
+      ansible.builtin.systemd:
+        name: 'tomcat.service'
+        state: 'started'
+  handlers:
+    - name: Reload the daemon, enable and start tomcat service         # sudo systemctl daemon-reload, # sudo systemctl enable --now tomcat, # sudo systemctl status tomcat 
       ansible.builtin.systemd:
         name: 'tomcat.service'
         daemon_reload: yes
         enabled: yes
-        state: started
+        state: 'restarted'
       when: ansible_facts['os_family'] == "Debian"                 
 
       
