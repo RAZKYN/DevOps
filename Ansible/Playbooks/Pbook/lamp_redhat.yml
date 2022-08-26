@@ -33,15 +33,11 @@
         name: httpd
         daemon_reload: yes
         enabled: yes
-<<<<<<< HEAD
-        state: restarted    
-=======
         state: restarted
     - name: Install php
       ansible.builtin.dnf:
         name: php
         state: latest
->>>>>>> 2add2465e505b59932cb0cc0089c3c601d202150
     - name: Change ownership
       ansible.builtin.file:
         path: "{{ home_dir }}"
