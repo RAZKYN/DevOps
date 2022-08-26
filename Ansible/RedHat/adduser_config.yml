@@ -1,0 +1,12 @@
+---
+- name: Install Ansible
+  become: yes
+  hosts: all
+  tasks:
+    - name: Create a user                                    # sudo adduser devops
+        ansible.builtin.user:
+          create_home: yes
+          name: "{{ username }}"
+          home: "{{ home_dir }}"
+          shell: "{{ default_shell }}"
+          state: present
