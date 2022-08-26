@@ -12,7 +12,7 @@
       ansible.builtin.user:
         create_home: yes
         name: "{{ username }}"
-        password: "{{ username }}"
+        password: "{{ password }}"
         home: "{{ home_dir }}"
         shell: "{{ default_shell }}"
         state: present
