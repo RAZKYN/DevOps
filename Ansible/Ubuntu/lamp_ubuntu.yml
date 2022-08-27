@@ -3,7 +3,36 @@
   become: yes
   hosts: all
   vars:
-    - username: jack
-    - password: jack
     - home_dir: /var/www/html/
- 
+
+  tasks:
+    - name: Update apt repo and cache                               # sudo apt update
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+    - name: Install Apache2                                         # sudo apt install apache2 -y
+      ansible.builtin.apt:
+        name: apache2
+        state: present
+    - name: Install php                                             # sudo apt install php libapache2-mod-php php-mysql -y
+      ansible.builtin.apt:
+        name: php
+        update_cache: yes
+        state: latest
+      notify:
+        - Reload the daemon, enable and start the service
+    - name: Ensure Apache is running                                # sudo systemctl status apache2
+      ansible.builtin.systemd:
+        name: 'apache2'
+        state: 'started'
+  handlers:      
+    - name: Reload the daemon, enable and start the service         # sudo systemctl enable apache2 && sudo systemctl restart apache2
+      ansible.builtin.systemd:
+        name: apache2
+        daemon_reload: yes
+        enabled: yes
+        state: restarted 
+    - name: Test PHP on Apache Web Server
+      ansible.builtin.copy:
+        src: 'php.service'
+        dest: "{{ home_dir }}/info.php"
