@@ -3,7 +3,7 @@
   become: yes
   hosts: all
   tasks:
-    - name: install NodeJS...
+    - name: NodeJS installing...
       package:
         name: "{{ NodeJS_package }}"
         state: present

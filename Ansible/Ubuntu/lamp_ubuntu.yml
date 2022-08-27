@@ -1,0 +1,9 @@
+---
+- name: Install L.A.M.P stack on Ubuntu
+  become: yes
+  hosts: all
+  vars:
+    - username: jack
+    - password: jack
+    - home_dir: /var/www/html/
+ 
