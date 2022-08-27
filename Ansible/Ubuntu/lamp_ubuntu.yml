@@ -36,7 +36,4 @@
         daemon_reload: yes
         enabled: yes
         state: restarted 
-    - name: Test PHP on Apache Web Server
-      ansible.builtin.copy:
-        src: 'php.service'
-        dest: "{{ home_dir }}/info.php"
+
