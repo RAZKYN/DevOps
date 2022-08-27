@@ -19,6 +19,10 @@
         name: php
         update_cache: yes
         state: latest
+    - name: Test php on Apache Web Server
+      ansible.builtin.copy:
+        src: 'php.service'
+        dest: "{{ home_dir }}/info.php"    
       notify:
         - Reload the daemon, enable and start the service
     - name: Ensure Apache is running                                # sudo systemctl status apache2
