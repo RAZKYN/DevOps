@@ -16,6 +16,13 @@
         home: "{{ home_dir }}"
         shell: /bin/bash
         state: present
+    - name: Change ownership
+      ansible.builtin.file:
+        path: "{{ home_dir }}"
+        state: directory
+        recurse: yes
+        owner: "{{ username }}"
+        group: "{{ username }}"    
     - name: Install Apache Web Server
       ansible.builtin.dnf:
         name: httpd
@@ -24,32 +31,22 @@
       ansible.builtin.dnf:
         name: php
         state: latest
+      notify:
+        - Reload the daemon, enable and start the service
     - name: Ensure Apache is running
       ansible.builtin.systemd:
-        name: httpd
-        state: started
+        name: 'httpd'
+        state: 'started'
+  handlers:      
     - name: Reload the daemon, enable and start the service
       ansible.builtin.systemd:
         name: httpd
         daemon_reload: yes
         enabled: yes
-        state: restarted
-    - name: Install php
-      ansible.builtin.dnf:
-        name: php
-        state: latest
-    - name: Change ownership
-      ansible.builtin.file:
-        path: "{{ home_dir }}"
-        state: directory
-        recurse: yes
-        owner: "{{ username }}"
-        group: "{{ username }}"
+        state: restarted    
     - name: Test PHP on Apache Web Server
       ansible.builtin.copy:
         src: 'php.service'
         dest: "/var/www/html/info.php"
         owner: "{{ username }}"
         group: "{{ username }}"
-
-          
