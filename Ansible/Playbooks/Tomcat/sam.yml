@@ -11,8 +11,8 @@
     - tomcat_bin_directory: /opt/tomcat/latest/bin
     - tomcat_service_location: /etc/systemd/system/tomcat.service
     - java_home: /usr/lib/jvm/java-11-openjdk-amd64
-    - tomcat_admin_user: tomcat
-    - tomcat_admin_password: tomcat
+    - tomcat_admin_user: devops
+    - tomcat_admin_password: devops
     - tomcat_users_relative: conf/tomcat-users.xml
     - tomcat_manage_allow_ip: ".*"
     - tomcat_allow_context_locations1:
@@ -108,8 +108,6 @@
         owner: "{{ username }}"
         group: "{{ username }}"
       when: ansible_facts['os_family'] == "Debian"
-      notify: 
-        - Reload the daemon, enable and start tomcat service
     - name: allow manager from specified ip range
       ansible.builtin.template:
         src: 'manager-context.xml.j2'
@@ -118,8 +116,6 @@
         group: "{{ username }}"
       when: ansible_facts['os_family'] == "Debian"
       loop: "{{ tomcat_allow_context_locations1 }}"
-      notify:
-        - Reload the daemon, enable and start the tomcat service
     - name: allow hostmanager from specified ip range
       ansible.builtin.template:
         src: 'hostmanager-context.xml.j2'
