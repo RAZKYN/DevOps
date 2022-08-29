@@ -98,8 +98,8 @@
       meta: flush_handlers
     - name: Ensure tomcat service is running
       ansible.builtin.systemd:
-        name: tomcat.service
-        state: started
+        name: 'tomcat.service'
+        state: 'started'
       when: ansible_facts['os_family'] == "Debian"
     - name: create the tomcat users file
       ansible.builtin.template:
@@ -138,5 +138,3 @@
         enabled: yes
         state: 'restarted'
       when: ansible_facts['os_family'] == "Debian"                 
-
-      
