@@ -15,9 +15,11 @@
     - tomcat_admin_password: devops
     - tomcat_users_relative: conf/tomcat-users.xml
     - tomcat_manage_allow_ip: ".*"
-    - tomcat_allow_context_locations:
+    - tomcat_allow_context_locations1:
         - /opt/tomcat/latest/webapps/manager/META-INF/context.xml
+    - tomcat_allow_context_locations2:    
         - /opt/tomcat/latest/webapps/host-manager/META-INF/context.xml
+
   tasks:
     - name: Update apt repo and cache                               # sudo apt update
       apt:
@@ -115,7 +117,7 @@
         owner: "{{ username }}"
         group: "{{ username }}"
       when: ansible_facts['os_family'] == "Debian"
-      loop: "{{ tomcat_allow_context_locations }}"
+      loop: "{{ tomcat_allow_context_locations1 }}"
       notify:
         - Reload the daemon, enable and start the tomcat service
     - name: allow hostmanager from specified ip range
@@ -125,7 +127,7 @@
         owner: "{{ username }}"
         group: "{{ username }}"
       when: ansible_facts['os_family'] == "Debian"
-      loop: "{{ tomcat_allow_context_locations }}"
+      loop: "{{ tomcat_allow_context_locations2 }}"
       notify:
         - Reload the daemon, enable and start the tomcat service      
   handlers:
