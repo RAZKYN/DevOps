@@ -1,20 +1,20 @@
 ---
-- name: Install L.A.M.P stack on Ubuntu
+- name: Install L.A.M.P stack on Ubuntu & RedHat
   become: yes
   hosts: all
   vars:
     - home_dir: /var/www/html/
 
   tasks:
-    - name: Update apt repo and cache                               # sudo apt update
+    - name: Update apt repo and cache
       apt:
         update_cache: yes
         force_apt_get: yes
-    - name: Install Apache2                                         # sudo apt install apache2 -y
+    - name: Install Apache2
       ansible.builtin.apt:
         name: apache2
         state: present
-    - name: Install php                                             # sudo apt install php libapache2-mod-php php-mysql -y
+    - name: Install php
       ansible.builtin.apt:
         name: php
         update_cache: yes
@@ -25,12 +25,12 @@
         dest: "{{ home_dir }}/info.php"    
       notify:
         - Reload the daemon, enable and start the service
-    - name: Ensure Apache is running                                # sudo systemctl status apache2
+    - name: Ensure Apache is running
       ansible.builtin.systemd:
         name: 'apache2'
         state: 'started'
   handlers:      
-    - name: Reload the daemon, enable and start the service         # sudo systemctl enable apache2 && sudo systemctl restart apache2
+    - name: Reload the daemon, enable and start the service
       ansible.builtin.systemd:
         name: apache2
         daemon_reload: yes
