@@ -103,7 +103,7 @@
         dest: "{{ item }}"
         owner: "{{ username }}"
         group: "{{ username }}"
-        loop: "{{ tomcat_allow_context_locations }}"
+      loop: "{{ tomcat_allow_context_locations }}"
       notify:
         - Reload the daemon, enable and start the tomcat service
   handlers:        
