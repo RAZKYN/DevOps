@@ -42,13 +42,13 @@
     - name: Extract the tar file
       ansible.builtin.unarchive:
         src: "/tmp/apache-tomcat-9.0.27.tar.gz"
-        dest: "{{ home_dir }}"/apache-tomcat-9.0.27
+        dest: "{{ home_dir }}/apache-tomcat-9.0.27"
         owner: "{{ username }}"
         group: "{{ username }}"
         remote_src: yes
     - name: Create a symbolic link
       ansible.builtin.file:
-        src:  "{{ home_dir }}"/apache-tomcat-9.0.27"
+        src:  "{{ home_dir }}/apache-tomcat-9.0.27"
         dest: "{{ tomcat_latest }}"
         owner: "{{ username }}"
         group: "{{ username }}"
