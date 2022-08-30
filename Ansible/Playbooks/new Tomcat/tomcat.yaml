@@ -37,18 +37,18 @@
         state: present 
     - name: Download Tomcat
       ansible.builtin.get_url:
-        url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.27/bin/apache-tomcat-9.0.27.tar.gz"
-        dest: "/tmp/apache-tomcat-9.0.27.tar.gz"  
+        url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.tar.gz"
+        dest: "/tmp/apache-tomcat-9.0.65.tar.gz"  
     - name: Extract the tar file
       ansible.builtin.unarchive:
-        src: "/tmp/apache-tomcat-9.0.27.tar.gz"
-        dest: "{{ home_dir }}/apache-tomcat-9.0.27"
+        src: "/tmp/apache-tomcat-9.0.65.tar.gz"
+        dest: "{{ home_dir }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         remote_src: yes
     - name: Create a symbolic link
       ansible.builtin.file:
-        src:  "{{ home_dir }}/apache-tomcat-9.0.27"
+        src:  "{{ home_dir }}/apache-tomcat-9.0.65"
         dest: "{{ tomcat_latest }}"
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -100,7 +100,7 @@
     - name: Allow manager and hostmanager from specified ip range
       ansible.builtin.template:
         src: 'hostmanager-context.xml.j2'
-        dest: "{{ tomcat_latest }}/{{ tomcat_users_relative }}"
+        dest: "{{ item }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         loop: "{{ tomcat_allow_context_locations }}"
