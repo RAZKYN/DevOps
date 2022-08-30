@@ -10,18 +10,19 @@
     - tomcat_latest: /opt/tomcat/latest
     - tomcat_bin_directory: /opt/tomcat/latest/bin
     - tomcat_service_location: /etc/systemd/system/tomcat.service
+    - java_home: /usr/lib/jvm/java-11-openjdk-amd64
 
   tasks:
-    - name: Update apt repo and cache                               # sudo apt update
+    - name: Update apt repo and cache
       apt:
         update_cache: yes
         force_apt_get: yes
       when: ansible_facts['os_family'] == "Debian"
-    - name: Install openjdk 11                                      # sudo apt install openjdk-11-jdk -y
+    - name: Install openjdk 11
       package:
         name: "{{ java_package }}"
         state: present 
-    - name: Create a tomcat user                                    # sudo useradd -m -U -d /opt/tomcat -s /bin/false tomcat
+    - name: Create a tomcat user
       ansible.builtin.user:
         create_home: yes
         name: "{{ username }}"
@@ -29,12 +30,12 @@
         shell: "{{ default_shell }}"
         state: present
       when: ansible_facts['os_family'] == "Debian"  
-    - name: Download tomcat                                         # wget https://dlcdn.apache.org/tomcat/tomcat-9/v${VERSION}/bin/apache-tomcat-${VERSION}.tar.gz -P /tmp
+    - name: Download tomcat
       ansible.builtin.get_url:  
         url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.tar.gz"
         dest: "/tmp/apache-tomcat-9.0.65.tar.gz"
       when: ansible_facts['os_family'] == "Debian"
-    - name: Extract tar file                                        # sudo tar -xf /tmp/apache-tomcat-${VERSION}.tar.gz -C /opt/tomcat/
+    - name: Extract tar file
       ansible.builtin.unarchive:
         src: "/tmp/apache-tomcat-9.0.65.tar.gz"
         dest: "{{ home_dir }}"
@@ -43,7 +44,7 @@
         group: "{{ username }}"
         remote_src: yes
       when: ansible_facts['os_family'] == "Debian"
-    - name: Create a symbolic link                                  # sudo ln -s /opt/tomcat/apache-tomcat-${VERSION} /opt/tomcat/latest
+    - name: Create a symbolic link
       ansible.builtin.file:
         src: "{{ home_dir }}/apache-tomcat-9.0.65"
         dest: "{{ tomcat_latest }}"
@@ -51,7 +52,7 @@
         group: "{{ username }}"
         state: link
       when: ansible_facts['os_family'] == "Debian"
-    - name: Change ownership for tomcat user                        # sudo chown -R tomcat: /opt/tomcat
+    - name: Change ownership for tomcat user
       ansible.builtin.file:
         path: "{{ home_dir }}"
         state: directory
@@ -68,7 +69,7 @@
     - name: Print files from previous module
       debug:
         var: sh_files_tomcat_bin
-    - name: Make sh files Executable                                # sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
+    - name: Make sh files Executable
       ansible.builtin.file:
         path: '{{ item.path }}'
         owner: "{{ username }}"
@@ -76,13 +77,12 @@
         mode: '0755'
       loop: "{{ sh_files_tomcat_bin.files }}"
       when: ansible_facts['os_family'] == "Debian"
-
     - name: Ensure tomcat service is running
       ansible.builtin.systemd:
         name: 'tomcat.service'
         state: 'started'
       when: ansible_facts['os_family'] == "Debian"
-    - name: copy the tomcat service file                            # sudo vi /etc/systemd/system/tomcat.service
+    - name: copy the tomcat service file
       ansible.builtin.template:
         src: 'tomcat.service.j2'
         dest: "{{ tomcat_service_location }}"
