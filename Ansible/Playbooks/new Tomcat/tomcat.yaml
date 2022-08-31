@@ -1,6 +1,6 @@
 ---
 - name: Install Tomcat on Centos 
-  hosts: all
+  hosts: appserver
   become: yes
   vars:
     - username: tomcat
