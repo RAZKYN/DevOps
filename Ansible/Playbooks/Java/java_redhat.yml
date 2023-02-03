@@ -1,0 +1,10 @@
+---
+- name: Install Java
+  become: yes
+  hosts: all
+  tasks:
+    - name: Install OpenJDK 11
+      ansible.builtin.yum:
+        name: java-11-openjdk
+        update_cache: yes
+        state: present
