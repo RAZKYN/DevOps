@@ -1,0 +1,9 @@
+---
+- name: Java Installations...
+  become: yes
+  hosts: Appserver
+  tasks:
+    - name: Install openjdk 11
+      package:
+        name: "{{ java_package }}"
+        state: present
