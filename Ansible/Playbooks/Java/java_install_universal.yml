@@ -3,6 +3,11 @@
   become: yes
   hosts: Appserver
   tasks:
+    - name: Update the Packages Repos & Cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+      when: ansible_facts['os_family'] == "Debian"  
     - name: Install openjdk 11
       package:
         name: "{{ java_package }}"
