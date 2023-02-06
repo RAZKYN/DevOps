@@ -1,7 +1,7 @@
 ---
 - name: Tomcat 9 Installation
   become: yes
-  hosts: Appserver
+  hosts: all
   vars:
         - username: tomcat
         - default_shell: /bin/false
