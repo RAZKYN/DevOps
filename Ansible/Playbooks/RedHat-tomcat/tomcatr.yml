@@ -82,11 +82,11 @@
     
     - name: copy the tomcat service file
       ansible.builtin.copy:
-        remote_src: yes
         src: 'tomcat.service'
         dest: "{{ tomcat_service_location }}"
         owner: "{{ username }}"
         group: "{{ username }}"
+        remote_src: yes
       when: ansible_facts['os_family'] == "RedHat"
     
     - name: reload the daemon, enable and start the tomcat service
