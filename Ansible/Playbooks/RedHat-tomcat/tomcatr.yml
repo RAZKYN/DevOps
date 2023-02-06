@@ -82,7 +82,7 @@
     
     - name: copy the tomcat service file
       ansible.builtin.copy:
-        remote_src: true
+        remote_src: yes
         src: 'tomcat.service'
         dest: "{{ tomcat_service_location }}"
         owner: "{{ username }}"
