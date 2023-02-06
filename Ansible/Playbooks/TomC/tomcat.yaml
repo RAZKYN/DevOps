@@ -52,6 +52,6 @@
         path: "{{ home_dir }}"
         owner: "{{ username }}"
         group: "{{ username }}"
-        state: link
+        state: directory
         mode: 0751
       when: ansible_facts['os_family'] == "Debian"
