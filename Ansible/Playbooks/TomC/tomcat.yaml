@@ -42,7 +42,7 @@
     
     - name: Create a Symbolic link
       ansible.builtin.file:
-        src: /opt/tomcat/apache-tomcat-${VERSION}
+        src: "/opt/tomcat/apache-tomcat-{{ tomcat_version }}"
         dest: "{{ tomcat_latest }}"
         state: link
       when: ansible_facts['os_family'] == "Debian"
