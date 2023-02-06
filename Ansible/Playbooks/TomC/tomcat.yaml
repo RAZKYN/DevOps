@@ -1,5 +1,5 @@
 ---
-- name: Java Installation
+- name: Tomcat 9 Installation
   become: yes
   hosts: Appserver
   vars:
@@ -8,6 +8,7 @@
         - home_dir: /opt/tomcat
         - tomcat_version: 9.0.71
         - tomcat_latest: /opt/tomcat/latest
+        - tomcat_bin_directory: /opt/tomcat/latest/bin
   tasks:     
     - name: Update the Packages Repos & Cache
       apt:
@@ -44,12 +45,12 @@
       ansible.builtin.file:
         src: "{{ home_dir }}/apache-tomcat-{{ tomcat_version }}"
         dest: "{{ tomcat_latest }}"
-        state: link
         owner: "{{ username }}"
         group: "{{ username }}"
+        state: link
       when: ansible_facts['os_family'] == "Debian"
        
-    - name: Change the directory ownership
+    - name: Change the ownership to tomcat user
       ansible.builtin.file:
         path: "{{ home_dir }}"
         state: directory
@@ -57,3 +58,25 @@
         owner: "{{ username }}"
         group: "{{ username }}"
       when: ansible_facts['os_family'] == "Debian"
+    
+    - name: find all the .sh files in the tomcat bin directory
+      ansible.builtin.find:
+      paths: "{{ tomcat_bin_directory }}"
+      patterns: "*.sh"
+      when: ansible_facts['os_family'] == "Debian"
+
+      register: sh_files_tomcat_bin
+    - name: print the files from the previous
+      debug:
+        var: sh_files_tomcat_bin
+      when: ansible_facts['os_family'] == "Debian"
+    
+    - name: Make shell scripts executable
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0755'
+      loop: "{{ sh_files_tomcat_bin.files }}"
+      when: ansible_facts['os_family'] == "Debian"
+      
