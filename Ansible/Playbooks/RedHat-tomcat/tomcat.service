@@ -4,7 +4,6 @@ After=network.target
 
 [Service]
 Type=forking
-
 User=tomcat
 Group=tomcat
 
@@ -16,8 +15,10 @@ Environment="CATALINA_HOME=/opt/tomcat/latest"
 Environment="CATALINA_PID=/opt/tomcat/latest/temp/tomcat.pid"
 Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
 
-ExecStart=/opt/tomcat/latest/bin/startup.sh
-ExecStop=/opt/tomcat/latest/bin/shutdown.sh
+ExecStart=/opt/tomcat/latest/bin/catalina.sh.sh
+ExecStop=/opt/tomcat/latest/bin/catalina.sh.sh
 
+RestartSec=10
+Restart=always
 [Install]
 WantedBy=multi-user.target
