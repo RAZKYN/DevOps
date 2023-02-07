@@ -4,7 +4,6 @@
   hosts: all
   vars:
     - home_dir: /var/www/html/info.php
-    - username: "devops"
     
   tasks:
     - name: Update the Packages Repos & Cache
