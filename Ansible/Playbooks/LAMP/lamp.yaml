@@ -32,13 +32,9 @@
         update_cache: yes
 
     - name: Test php on Apache Web Server
-      ansible.builtin.copy:
-        remote_src: yes
-        src: info.php.j2
-        dest: "{{ home_dir }}"
-        owner: "{{ username }}"
-        group: "{{ username }}"
-        mode: '0755'
+      template:
+        src: "info.php.j2"
+        dest: "/var/www/{{ http_host }}/info.php"
         
       notify:
         - Reload the daemon, enable and start the service
