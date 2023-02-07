@@ -4,6 +4,7 @@
   hosts: all
   vars:
     - home_dir: /var/www/html/info.php.j2
+    - username: "devops"
     
   tasks:
     - name: Update the Packages Repos & Cache
@@ -35,6 +36,8 @@
         remote_src: yes
         src: info.php.j2
         dest: "{{ home_dir }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
         mode: '0755'
         
       notify:
