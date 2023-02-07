@@ -33,7 +33,7 @@
     - name: Test php on Apache Web Server
       ansible.builtin.copy:
         remote_src: yes
-        src: https://github.com/RAZKYN/DevOps/blob/main/Ansible/Playbooks/LAMP/php.service
+        src: php.service
         dest: "{{ home_dir }}/info.php"
         mode: '0755'
         
