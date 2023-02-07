@@ -33,7 +33,7 @@
     - name: Test php on Apache Web Server
       ansible.builtin.copy:
         remote_src: yes
-        src: info.php
+        src: info.php.j2
         dest: "{{ home_dir }}"
         mode: '0755'
         
