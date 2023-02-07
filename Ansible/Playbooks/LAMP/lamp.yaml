@@ -3,7 +3,7 @@
   become: yes
   hosts: all
   vars:
-    - home_dir: /var/www/html/info.php.j2
+    - home_dir: /var/www/html/info.php
     - username: "devops"
     
   tasks:
@@ -34,7 +34,7 @@
     - name: Test php on Apache Web Server
       ansible.builtin.copy:
         remote_src: yes
-        src: info.php.j2
+        src: info.php
         dest: "{{ home_dir }}"
         owner: "{{ username }}"
         group: "{{ username }}"
