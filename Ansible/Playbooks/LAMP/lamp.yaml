@@ -3,7 +3,7 @@
   become: yes
   hosts: all
   vars:
-    - home_dir: /var/www/html/info.php
+    - home_dir: /var/www/html/info.php.j2
     
   tasks:
     - name: Update the Packages Repos & Cache
