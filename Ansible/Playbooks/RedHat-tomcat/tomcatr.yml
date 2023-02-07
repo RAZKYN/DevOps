@@ -81,7 +81,7 @@
       when: ansible_facts['os_family'] == "RedHat"
     
     - name: copy the tomcat service file
-      ansible.builtin.copy:
+      copy:
         src: tomcat.service
         dest: "{{ tomcat_service_location }}"
         owner: "{{ username }}"
