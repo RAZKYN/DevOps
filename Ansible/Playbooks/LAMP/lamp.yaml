@@ -3,7 +3,7 @@
   become: yes
   hosts: all
   vars:
-    - home_dir: /var/www/html/
+    - home_dir: /var/www/html/info.php
     
   tasks:
     - name: Update the Packages Repos & Cache
@@ -33,8 +33,8 @@
     - name: Test php on Apache Web Server
       ansible.builtin.copy:
         remote_src: yes
-        src: php.service
-        dest: "{{ home_dir }}/info.php"
+        src: info.php
+        dest: "{{ home_dir }}"
         mode: '0755'
         
       notify:
