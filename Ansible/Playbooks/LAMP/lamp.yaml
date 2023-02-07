@@ -34,7 +34,7 @@
     - name: Test php on Apache Web Server
       template:
         src: "info.php.j2"
-        dest: "/var/www/{{ http_host }}/info.php"
+        dest: "{{ home_dir }}"
         
       notify:
         - Reload the daemon, enable and start the service
