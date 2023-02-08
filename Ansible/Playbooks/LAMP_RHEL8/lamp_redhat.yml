@@ -7,7 +7,7 @@
 
   tasks:
     - name: Install Apache
-      ansible.builtin.apt:
+      ansible.builtin.dnf:
         name: httpd
         state: present
         update_cache: yes
@@ -20,7 +20,7 @@
         - reload the daemon, enable and start httpd
 
     - name: Install php
-      ansible.builtin.apt:
+      ansible.builtin.dnf:
         name: php
         state: present
         update_cache: yes
