@@ -1,0 +1,29 @@
+#!/bin/bash
+sudo apt update
+sudo apt install python3 -y
+
+#sudo adduser --disabled-password --gecos "" username
+#sudo useradd -m -p devops -s /bin/bash devops
+#sudo useradd -m -d /home/username -s /bin/bash username
+
+#Create a user with empty password
+#sudo useradd test-user
+#echo test-user:U6aMy0wojraho | sudo chpasswd -e
+#su test-user
+#The password prompt still shows unfortunately.
+#But if you just hit enter without typing anything, and it logins as the user.
+
+#Add user to sudoers group
+#sudo adduser devops sudo
+#User can be disabled by changing the shell to /dev/null
+#sudo usermod -s /dev/null mangesh
+
+#sudo sh -c "echo 'devops ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers"
+
+#sudo su - devops
+#sudo -s -u devops
+
+sudo useradd -m -p U6aMy0wojraho -s /bin/bash devops
+sudo usermod -aG sudo devops
+
+sudo subscription-manager repos --enable "rhel-*-optional-rpms" --enable "rhel-*-extras-rpms"
