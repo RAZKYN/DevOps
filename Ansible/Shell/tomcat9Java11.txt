@@ -11,7 +11,7 @@ ln -s /opt/tomcat/apache-tomcat-${VERSION} /opt/tomcat/latest
 
 chown -R tomcat: /opt/tomcat
 sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
-echo ‘[Unit]
+echo '[Unit]
 Description=Tomcat 9 servlet container
 After=network.target
 [Service]
@@ -30,7 +30,7 @@ ExecStart=/opt/tomcat/latest/bin/startup.sh
 ExecStop=/opt/tomcat/latest/bin/shutdown.sh
 
 [Install]
-WantedBy=multi-user.target’ > /etc/systemd/system/tomcat.service
+WantedBy=multi-user.target' > /etc/systemd/system/tomcat.service
 
 systemctl daemon-reload
 systemctl enable --now tomcat
