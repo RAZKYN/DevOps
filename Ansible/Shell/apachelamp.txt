@@ -1,0 +1,30 @@
+
+
+#LAMP in Ubuntu 20.04
+
+#!/bin/bash
+sudo -i
+apt update
+apt install apache2 -y
+apt install php libapache2-mod-php php-mysql -y 
+echo '<?php phpinfo(); ?>' > info.php
+cp info.php /var/www/html/
+systemctl restart apache2 &
+
+
+
+
+#LAMP in RedHat 9.1
+
+#!/bin/bash
+sudo -i
+dnf update -y
+dnf install httpd -y
+systemctl start httpd
+systemctl enable httpd
+dnf install php -y 
+echo '<?php phpinfo(); ?>' > info.php
+cp info.php /var/www/html/
+systemctl restart httpd &
+
+
