@@ -1,5 +1,3 @@
-
-
 #LAMP in Ubuntu 20.04
 
 #!/bin/bash
