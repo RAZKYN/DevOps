@@ -1,10 +1,9 @@
 ---
-- name: Install LAMP on RHEL8
+- name: Install LAMP on RHEL9.1
   become: yes
   hosts: all
   vars:
     - home_dir: /var/www/html/info.php
-    - default_shell: /bin/false
 
   tasks:
     - name: Install Apache
@@ -39,7 +38,7 @@
     handlers:    
     - name: reload the daemon, enable and start httpd
       ansible.builtin.systemd:
-        name: "httpd.service"
+        name: "httpd"
         daemon_reload: yes
         enabled: yes
         state: restarted
