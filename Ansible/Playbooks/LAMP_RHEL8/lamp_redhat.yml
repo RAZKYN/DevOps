@@ -1,54 +1,45 @@
 ---
-- name: Install L.A.M.P stack on RedHat
+- name: Install LAMP on RHEL8
   become: yes
   hosts: all
   vars:
-    - username: jimmy
-    - password: jimmy
     - home_dir: /var/www/html/info.php
- 
+    - default_shell: /bin/false
+
   tasks:
-    - name: Create a user
-      ansible.builtin.user:
-        create_home: yes
-        name: "{{ username }}"
-        password: "{{ password }}"
-        home: "{{ home_dir }}"
-        shell: /bin/bash
+    - name: Install Apache
+      ansible.builtin.apt:
+        pkg:
+        - httpd
         state: present
-    - name: Change ownership
-      ansible.builtin.file:
-        path: "{{ home_dir }}"
-        state: directory
-        recurse: yes
-        owner: "{{ username }}"
-        group: "{{ username }}"    
-    - name: Install Apache Web Server
-      ansible.builtin.dnf:
-        name: httpd
         update_cache: yes
-        state: latest
-    - name: Install php
-      ansible.builtin.dnf:
-        name: php
-        update_cache: yes
-        state: latest
-      notify:
-        - Reload the daemon, enable and start the service
+
     - name: Ensure Apache is running
       ansible.builtin.systemd:
         name: 'httpd'
         state: 'started'
-  handlers:      
-    - name: Reload the daemon, enable and start the service
+      notify:
+        - reload the daemon, enable and start httpd
+
+    - name: Install php
+      ansible.builtin.apt:
+        name: php
+        state: present
+        update_cache: yes
+      notify:
+        - reload the daemon, enable and start httpd
+
+    - name: Test php on Apache Web Server
+      ansible.builtin.copy:
+        src: 'info.php'
+        dest: "{{ home_dir }}"
+      notify:
+        - reload the daemon, enable and start httpd
+
+    handlers:    
+    - name: reload the daemon, enable and start httpd
       ansible.builtin.systemd:
-        name: httpd
+        name: "httpd.service"
         daemon_reload: yes
         enabled: yes
-        state: restarted    
-    - name: Test PHP on Apache Web Server
-      ansible.builtin.copy:
-        src: 'php.service'
-        dest: "{{ home_dir }}"
-        owner: "{{ username }}"
-        group: "{{ username }}"
+        state: restarted
