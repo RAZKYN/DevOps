@@ -8,8 +8,7 @@
   tasks:
     - name: Install Apache
       ansible.builtin.apt:
-        pkg:
-        - httpd
+        name: httpd
         state: present
         update_cache: yes
 
