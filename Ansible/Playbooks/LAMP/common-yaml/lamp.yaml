@@ -2,6 +2,8 @@
 - name: L.A.M.P
   hosts: WebServer
   become: yes
+  vars:
+    - php_page_location: /var/www/html/info.php
   tasks:
 
     - name: update packages repos
@@ -28,9 +30,11 @@
 
     - name: Test php on Apache Web Server
       ansible.builtin.copy:
-        src: 'www/info.php'
+        src: www/info.php
         dest: "{{ php_page_location }}"
         remote_src: yes
+      notify:
+        - Ensure Apache is enabled & started  
 
   handlers:
     - name: Ensure Apache is enabled & started
