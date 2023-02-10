@@ -30,7 +30,7 @@
 
     - name: Test php on Apache Web Server
       ansible.builtin.copy:
-        src: www/info.php
+        src: 'www/info.php'
         dest: "{{ php_page_location }}"
         remote_src: yes
       notify:
