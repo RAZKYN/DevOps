@@ -17,8 +17,11 @@
         name: "{{ apache_package }}"
         state: present
         update_cache: yes
-      notify:
-        - Ensure Apache is enabled & started
+    
+    - name: Ensure Apache is running
+      ansible.builtin.systemd:
+        name: "{{ apache_package }}"
+        state: 'started'
 
     - name: Install php packages
       ansible.builtin.package:
@@ -26,7 +29,7 @@
         state: present
       loop: "{{ php_packages }}"
       notify:
-        - Ensure Apache is enabled & started  
+        - Ensure Apache is enabled & started 
 
     - name: Test php on Apache Web Server
       ansible.builtin.copy:
