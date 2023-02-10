@@ -5,7 +5,7 @@
   tasks:
 
     - name: update packages repos
-      ansible.builtin.apt
+      ansible.builtin.apt:
         update_cache: yes
         force_apt_get: yes
       when: ansible_facts['os_family'] == "Debian"
@@ -39,4 +39,3 @@
         enabled: yes
         state: restarted
 
-      
