@@ -40,7 +40,7 @@
     - name: Test php on Apache Web Server
       ansible.builtin.copy:
         src: 'info.php'
-        dest: "{{ home_dir }}"  
+        dest: "{{ home_dir }}"
       notify:
         - Reload the daemon, enable and start the service
 

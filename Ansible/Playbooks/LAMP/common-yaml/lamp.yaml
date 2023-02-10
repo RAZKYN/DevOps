@@ -3,7 +3,7 @@
   hosts: WebServer
   become: yes
   vars:
-    - php_page_location: /var/www/html/info.php
+    - php_page_location: /var/www/html/
   tasks:
 
     - name: update packages repos
