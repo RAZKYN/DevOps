@@ -1,0 +1,42 @@
+---
+- name: L.A.M.P
+  hosts: WebServer
+  become: yes
+  tasks:
+
+    - name: update packages repos
+      ansible.builtin.apt
+        update_cache: yes
+        force_apt_get: yes
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install Apache
+      ansible.builtin.package:
+        name: "{{ apache_package }}"
+        state: present
+        update_cache: yes
+      notify:
+        - Ensure Apache is enabled & started
+
+    - name: Install php packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ php_packages }}"
+      notify:
+        - Ensure Apache is enabled & started  
+
+    - name: Test php on Apache Web Server
+      ansible.builtin.copy:
+        src: 'www/info.php'
+        dest: "{{ php_page_location }}"
+        remote_src: yes
+
+  handlers:
+    - name: Ensure Apache is enabled & started
+      ansible.builtin.service
+        name: "{{ apache_package }}"
+        enabled: yes
+        state: restarted
+
+      
