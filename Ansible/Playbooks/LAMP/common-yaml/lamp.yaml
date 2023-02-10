@@ -2,8 +2,6 @@
 - name: L.A.M.P
   hosts: WebServer
   become: yes
-  vars:
-    - php_page_location: /var/www/html/info.php
   tasks:
 
     - name: update packages repos
