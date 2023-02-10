@@ -34,7 +34,7 @@
 
   handlers:
     - name: Ensure Apache is enabled & started
-      ansible.builtin.service
+      ansible.builtin.service:
         name: "{{ apache_package }}"
         enabled: yes
         state: restarted
