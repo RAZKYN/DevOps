@@ -3,7 +3,7 @@
   hosts: WebServer
   become: yes
   vars:
-    - php_page_location: /var/www/html/
+    - php_page_location: /var/www/html/info.php
   tasks:
 
     - name: update packages repos
@@ -32,7 +32,6 @@
       ansible.builtin.copy:
         src: 'www/info.php'
         dest: "{{ php_page_location }}"
-        remote_src: yes
       notify:
         - Ensure Apache is enabled & started  
 
