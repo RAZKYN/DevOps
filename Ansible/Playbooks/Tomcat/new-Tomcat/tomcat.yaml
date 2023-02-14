@@ -68,7 +68,7 @@
     - name: Print o/p of previous module
       debug: 
         var: sh_files_tomcat_bin
-    - name: Make .sh files Executable
+    - name: Make .sh files Executables
       ansible.builtin.file:
         path: "{{ item.path }}"
         owner: "{{ username }}"
