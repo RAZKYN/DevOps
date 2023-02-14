@@ -1,3 +1,3 @@
 [appserver]
-#10.0.0.8 java_package=openjdk-11-jdk
-10.0.0.6 java_package=java-11-openjdk
+20.204.101.108 java_package=openjdk-11-jdk
+#10.0.0.6 java_package=java-11-openjdk
