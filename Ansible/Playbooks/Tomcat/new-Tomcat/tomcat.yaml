@@ -55,7 +55,7 @@
         owner: "{{ username }}"
         group: "{{ username }}"
         state: link
-    - name: Change the ownership for tomcat user
+    - name: Change the ownership of tomcat user
       ansible.builtin.file:
         path: "{{ home_dir }}" 
         owner: "{{ username }}"
