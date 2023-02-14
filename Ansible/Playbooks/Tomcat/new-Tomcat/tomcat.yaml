@@ -113,7 +113,8 @@
         url: "{{ deploy_url }}"
         dest: "{{ tomcat_latest }}/webapps/{{ deploy_file_name }}"
       notify:
-        - Reload the daemon, enable and start the tomcat service  
+        - Reload the daemon, enable and start the tomcat service
+  handlers:      
     - name: Reload the daemon, enable and start the tomcat service 
       ansible.builtin.systemd:
         name: 'tomcat.service'
