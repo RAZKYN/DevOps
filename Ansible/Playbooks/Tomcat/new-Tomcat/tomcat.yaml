@@ -36,16 +36,15 @@
         home: "{{ home_dir }}"
         shell: "{{ default_shell }}"
         state: present 
-    - name: Download Tomcat
+    - name: Download Tomcat 9
       ansible.builtin.get_url:
         url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
         dest: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"  
     - name: Extract the tar file
       ansible.builtin.unarchive:
+        creates: "{{ home_dir }}/apache-tomcat-{{ tomcat_version }}"
         src: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
         dest: "{{ home_dir }}"
-        owner: "{{ username }}"
-        group: "{{ username }}"
         remote_src: yes
     - name: Create a symbolic link
       ansible.builtin.file:
@@ -100,7 +99,7 @@
         - Reload the daemon, enable and start the tomcat service
     - name: Allow manager and hostmanager from specified ip range
       ansible.builtin.template:
-        src: 'hostmanager-context.xml.j2'
+        src: 'manager-context.xml.j2'
         dest: "{{ item }}"
         owner: "{{ username }}"
         group: "{{ username }}"
