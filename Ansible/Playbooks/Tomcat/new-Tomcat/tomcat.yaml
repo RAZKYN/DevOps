@@ -39,11 +39,11 @@
     - name: Download Tomcat 9
       ansible.builtin.get_url:
         url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
-        dest: "/home/justin/apache-tomcat-{{ tomcat_version }}.tar.gz"  
+        dest: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"  
     - name: Extract the tar file
       ansible.builtin.unarchive:
         creates: "{{ home_dir }}/apache-tomcat-{{ tomcat_version }}"
-        src: "/home/justin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+        src: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
         dest: "{{ home_dir }}"
         remote_src: yes
     - name: Create a symbolic link
