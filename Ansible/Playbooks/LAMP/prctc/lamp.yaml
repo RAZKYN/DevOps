@@ -1,0 +1,35 @@
+---
+- name: LAMP in Ubuntu
+  become: yes
+  hosts: webserver
+  tasks:
+
+    - name: update library
+      apt:
+        update_cache: yes
+
+    - name: Install Apache2
+      package:
+        name: "{{ apache_package }}"
+        state: present
+      notify:
+        Ensure apache is started & running
+
+    - name: Install php
+      package:
+        name: "{{ php_packages }}"
+        state: present
+      
+
+    - name: copy the info.php file
+      ansible.builtin.copy:
+        src: "info.php"
+        dest: "{{ php_home }}"
+      notify:
+        Ensure apache is started & running  
+
+  handlers:
+    - name: Ensure apache is started & running
+      daemon_reload: yes
+      state: restarted
+      enabled: yes
