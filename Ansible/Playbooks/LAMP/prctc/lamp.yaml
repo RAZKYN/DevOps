@@ -1,5 +1,5 @@
 ---
-- name: LAMP in Ubuntu
+- name: LAMP in any Linux
   become: yes
   hosts: webserver
   tasks:
@@ -12,8 +12,11 @@
       package:
         name: "{{ apache_package }}"
         state: present
-      notify:
-        Ensure apache is started & running
+
+    - name: Ensure Apache2 is started
+      ansible.builtin.service:
+        name: "{{ apache_package }}"
+        state: started
 
     - name: Install php
       package:
