@@ -30,7 +30,7 @@
   handlers:
     - name: Ensure apache is started & running
       ansible.builtin.systemd:
-        name: apache
+        name: "{{ apache_package }}"
         daemon_reload: yes
         enabled: yes
         state: restarted
