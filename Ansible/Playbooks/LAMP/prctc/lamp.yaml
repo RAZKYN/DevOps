@@ -7,7 +7,8 @@
     - name: update library
       apt:
         update_cache: yes
-
+      when: ansible_facts['os_family'] == "Debian"
+      
     - name: Install Apache2
       package:
         name: "{{ apache_package }}"
