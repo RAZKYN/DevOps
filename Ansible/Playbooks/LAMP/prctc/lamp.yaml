@@ -29,8 +29,8 @@
 
   handlers:
     - name: Ensure apache is started & running
-      ansible.builtin.service:
-        name: apache2
+      ansible.builtin.systemd:
+        name: apache
         daemon_reload: yes
         enabled: yes
         state: restarted
