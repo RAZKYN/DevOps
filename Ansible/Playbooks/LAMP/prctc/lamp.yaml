@@ -20,7 +20,7 @@
         name: "{{ php_packages }}"
         state: present
 
-    - name: copy the info.php file
+    - name: Test php on Apache WebServer
       ansible.builtin.copy:
         src: "info.php"
         dest: "{{ php_home }}"
