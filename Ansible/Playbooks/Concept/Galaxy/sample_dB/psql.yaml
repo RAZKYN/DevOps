@@ -1,6 +1,8 @@
 ---
-- name: Install Postgres
+- name: Install postgres
   hosts: database
+  vars:
+    postgresql_client_use_repo: true
   roles:
-    - role: ANXS.postgresql
-      become: yes
+    - alphanodes.postgresql_client
+    become: yes
