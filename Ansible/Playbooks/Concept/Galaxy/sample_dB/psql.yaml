@@ -4,5 +4,5 @@
   vars:
     postgresql_client_use_repo: true
   roles:
-    - alphanodes.postgresql_client
-    become: yes
+    - role: alphanodes.postgresql_client
+      become: yes
