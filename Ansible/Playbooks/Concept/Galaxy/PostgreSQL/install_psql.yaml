@@ -1,6 +1,7 @@
 ---
 - name: Install Postgres
   hosts: database
+  remote_user: root
   roles:
-    - role: geerlingguy.postgresql
+    - role: postgresql
       become: yes
