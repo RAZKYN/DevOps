@@ -1,0 +1,6 @@
+---
+- name: Install Postgres
+  hosts: database
+  roles:
+    - role: ANXS.postgresql
+      become: yes
