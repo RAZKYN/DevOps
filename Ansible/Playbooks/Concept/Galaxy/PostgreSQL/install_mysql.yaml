@@ -1,0 +1,6 @@
+---
+- name: Install Postgres
+  hosts: database
+  roles:
+    - role: geerlingguy.postgresql
+      become: yes
