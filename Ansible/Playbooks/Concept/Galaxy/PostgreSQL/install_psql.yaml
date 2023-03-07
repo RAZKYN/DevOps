@@ -1,7 +1,6 @@
 ---
 - name: Install Postgres
   hosts: database
-  remote_user: root
   roles:
-    - role: postgresql
+    - role: ANXS.postgresql
       become: yes
