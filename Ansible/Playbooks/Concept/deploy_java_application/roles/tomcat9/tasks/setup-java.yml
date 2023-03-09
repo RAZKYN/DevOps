@@ -1,0 +1,5 @@
+---
+- name: Install openjdk 11
+  ansible.builtin.package:
+    name: "{{ java_package }}"
+    state: present 

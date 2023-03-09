@@ -1,0 +1,6 @@
+---
+- name: Install tomcat9 and deploy the Application
+  hosts: appserver
+  roles:
+    - role: tomcat9
+      become: yes
